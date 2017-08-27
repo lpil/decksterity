@@ -1,9 +1,9 @@
 name: decksterity
-version: '0.1.0.0'
+version: '0.1.0'
 category: Web
 author: Louis Pilfold
 maintainer: louis@lpil.uk
-copyright: 2017 Louis Pilfold
+copyright: 2017 - Present Louis Pilfold
 license: MPL-2.0
 license-file: LICENCE
 github: lpil/decksterity
@@ -40,3 +40,4 @@ tests:
     dependencies:
     - base
     - decksterity
+    - hspec
