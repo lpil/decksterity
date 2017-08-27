@@ -4,18 +4,21 @@ category: Web
 author: Louis Pilfold
 maintainer: louis@lpil.uk
 copyright: 2017 Louis Pilfold
-license: BSD3
+license: MPL-2.0
+license-file: LICENCE
 github: lpil/decksterity
 extra-source-files:
 - README.md
+
 library:
   source-dirs: src
   exposed-modules:
   - Lib
   dependencies:
   - base >=4.7 && <5
+
 executables:
-  decksterity-exe:
+  decksterity:
     main: Main.hs
     source-dirs: app
     ghc-options:
@@ -25,6 +28,7 @@ executables:
     dependencies:
     - base
     - decksterity
+
 tests:
   decksterity-test:
     main: Spec.hs
