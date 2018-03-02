@@ -6,3 +6,5 @@ authors = ["Louis Pilfold <louis@lpil.uk>"]
 [dependencies]
 # Cross platform audio IO
 cpal = "0.8"
+# Chaining of DSP nodes
+dsp-chain = "0.13"
