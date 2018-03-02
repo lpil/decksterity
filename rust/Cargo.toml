@@ -3,8 +3,16 @@ name = "decksterity"
 version = "0.1.0"
 authors = ["Louis Pilfold <louis@lpil.uk>"]
 
+[lib]
+name = "lib"
+path = "src/lib.rs"
+
+[[bin]]
+name = "decksterity"
+path = "src/main.rs"
+
 [dependencies]
-# Cross platform audio IO
+# Cross platform audio IO (Apache 2.0)
 cpal = "0.8"
-# Chaining of DSP nodes
+# Chaining of DSP nodes (MIT)
 dsp-chain = "0.13"
