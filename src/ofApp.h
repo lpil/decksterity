@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Deck.h"
+#include "Engine.h"
 #include "ofMain.h"
 
 class ofApp : public ofBaseApp {
@@ -23,5 +23,5 @@ public:
   auto gotMessage(ofMessage msg) -> void;
 
 private:
-  Deck deck;
+  Engine engine;
 };

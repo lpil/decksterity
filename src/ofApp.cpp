@@ -1,7 +1,10 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-auto ofApp::setup() -> void { deck.load("techno.flac"); }
+auto ofApp::setup() -> void {
+  engine.load(Engine::A, "techno.flac");
+  engine.load(Engine::B, "techno.flac");
+}
 
 //--------------------------------------------------------------
 auto ofApp::update() -> void {}
@@ -12,16 +15,30 @@ auto ofApp::draw() -> void {}
 //--------------------------------------------------------------
 auto ofApp::keyPressed(int key) -> void {
   switch (key) {
-  case ' ':
-    deck.playPause();
+  // Deck A
+  case 'q':
+    engine.adjustSpeed(Engine::A, 1.001);
     break;
 
-  case OF_KEY_UP:
-    deck.adjustSpeed(1.001);
+  case 'a':
+    engine.adjustSpeed(Engine::A, 0.999);
     break;
 
-  case OF_KEY_DOWN:
-    deck.adjustSpeed(0.999);
+  case 'z':
+    engine.playPause(Engine::A);
+    break;
+
+  // Deck B
+  case 'w':
+    engine.adjustSpeed(Engine::B, 1.001);
+    break;
+
+  case 's':
+    engine.adjustSpeed(Engine::B, 0.999);
+    break;
+
+  case 'x':
+    engine.playPause(Engine::B);
     break;
   }
 }
