@@ -1,72 +1,57 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup() {
-  deck.load("techno.flac");
-  deck.play();
-}
+auto ofApp::setup() -> void { deck.load("techno.flac"); }
 
 //--------------------------------------------------------------
-void ofApp::update() {}
+auto ofApp::update() -> void {}
 
 //--------------------------------------------------------------
-void ofApp::draw() {}
+auto ofApp::draw() -> void {}
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key) {
+auto ofApp::keyPressed(int key) -> void {
   switch (key) {
   case ' ':
-    playPause(deck);
+    deck.playPause();
     break;
 
   case OF_KEY_UP:
-    adjustSpeed(deck, 0.05);
+    deck.adjustSpeed(1.001);
     break;
 
   case OF_KEY_DOWN:
-    adjustSpeed(deck, -0.05);
+    deck.adjustSpeed(0.999);
     break;
   }
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key) {}
+auto ofApp::keyReleased(int key) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y) {}
+auto ofApp::mouseMoved(int x, int y) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button) {}
+auto ofApp::mouseDragged(int x, int y, int button) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button) {}
+auto ofApp::mousePressed(int x, int y, int button) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button) {}
+auto ofApp::mouseReleased(int x, int y, int button) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y) {}
+auto ofApp::mouseEntered(int x, int y) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y) {}
+auto ofApp::mouseExited(int x, int y) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h) {}
+auto ofApp::windowResized(int w, int h) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg) {}
+auto ofApp::gotMessage(ofMessage msg) -> void {}
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo) {}
-
-void ofApp::playPause(ofSoundPlayer deck) {
-  if (deck.isPlaying()) {
-    deck.setPaused(true);
-  } else {
-    deck.setPaused(false);
-  }
-}
-
-void ofApp::adjustSpeed(ofSoundPlayer deck, float delta) {
-  deck.setSpeed(deck.getSpeed() + delta);
-}
+auto ofApp::dragEvent(ofDragInfo dragInfo) -> void {}

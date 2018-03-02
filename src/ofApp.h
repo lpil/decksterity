@@ -1,28 +1,27 @@
 #pragma once
 
+#include "Deck.h"
 #include "ofMain.h"
 
 class ofApp : public ofBaseApp {
 
 public:
-  void setup();
-  void update();
-  void draw();
+  auto setup() -> void;
+  auto update() -> void;
+  auto draw() -> void;
 
-  void keyPressed(int key);
-  void keyReleased(int key);
-  void mouseMoved(int x, int y);
-  void mouseDragged(int x, int y, int button);
-  void mousePressed(int x, int y, int button);
-  void mouseReleased(int x, int y, int button);
-  void mouseEntered(int x, int y);
-  void mouseExited(int x, int y);
-  void windowResized(int w, int h);
-  void dragEvent(ofDragInfo dragInfo);
-  void gotMessage(ofMessage msg);
+  auto keyPressed(int key) -> void;
+  auto keyReleased(int key) -> void;
+  auto mouseMoved(int x, int y) -> void;
+  auto mouseDragged(int x, int y, int button) -> void;
+  auto mousePressed(int x, int y, int button) -> void;
+  auto mouseReleased(int x, int y, int button) -> void;
+  auto mouseEntered(int x, int y) -> void;
+  auto mouseExited(int x, int y) -> void;
+  auto windowResized(int w, int h) -> void;
+  auto dragEvent(ofDragInfo dragInfo) -> void;
+  auto gotMessage(ofMessage msg) -> void;
 
-  ofSoundPlayer deck;
-
-  void playPause(ofSoundPlayer deck);
-  void adjustSpeed(ofSoundPlayer deck, float delta);
+private:
+  Deck deck;
 };
