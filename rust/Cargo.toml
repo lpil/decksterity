@@ -1,0 +1,8 @@
+[package]
+name = "decksterity"
+version = "0.1.0"
+authors = ["Louis Pilfold <louis@lpil.uk>"]
+
+[dependencies]
+# Cross platform audio IO
+cpal = "0.8"
