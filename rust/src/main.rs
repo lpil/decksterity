@@ -37,16 +37,18 @@ fn main() {
 
     let mut graph = Graph::new();
 
-    // Construct our fancy Synth and add it to the graph!
-    let synth = graph.add_node(DspNode::Synth);
+    let master = graph.add_node(DspNode::Master);
+    let master_vol = graph.add_node(DspNode::Volume(1.0));
 
-    // Connect a few oscillators to the synth.
-    graph.add_input(DspNode::Oscillator(0.0, A5_HZ, 0.2), synth);
-    graph.add_input(DspNode::Oscillator(0.0, D5_HZ, 0.1), synth);
-    graph.add_input(DspNode::Oscillator(0.0, F5_HZ, 0.15), synth);
+    graph
+        .add_connection(master_vol, master)
+        .expect("feedback loop");
 
-    // Set the synth as the master node for the graph.
-    graph.set_master(Some(synth));
+    graph.add_input(DspNode::Oscillator(0.0, A5_HZ, 0.2), master_vol);
+    graph.add_input(DspNode::Oscillator(0.0, D5_HZ, 0.1), master_vol);
+    graph.add_input(DspNode::Oscillator(0.0, F5_HZ, 0.15), master_vol);
+
+    graph.set_master(Some(master));
 
     // The callback we'll use to pass to the Stream. It will request audio from our dsp_graph.
     event_loop.run(move |_, data| {
@@ -69,10 +71,8 @@ fn main() {
 /// Our type for which we will implement the `Dsp` trait.
 #[derive(Debug)]
 enum DspNode {
-    /// Synth will be our demonstration of a master GraphNode.
-    Synth,
-    /// Oscillator will be our generator type of node, meaning that we will override
-    /// the way it provides audio via its `audio_requested` method.
+    Master,
+    Volume(f32),
     Oscillator(Phase, Frequency, Volume),
 }
 
@@ -80,7 +80,10 @@ impl Node<[Output; CHANNELS]> for DspNode {
     /// Here we'll override the audio_requested method and generate a sine wave.
     fn audio_requested(&mut self, buffer: &mut [[Output; CHANNELS]], sample_hz: f64) {
         match *self {
-            DspNode::Synth => (),
+            DspNode::Master => (),
+            DspNode::Volume(volume) => {
+                dsp::slice::map_in_place(buffer, |frame| frame.map(|s| s.mul_amp(volume)))
+            }
             DspNode::Oscillator(ref mut phase, frequency, volume) => {
                 dsp::slice::map_in_place(buffer, |_| {
                     let val = sine_wave(*phase, volume);
