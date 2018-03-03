@@ -92,6 +92,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "claxon"
+version = "0.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "core-foundation-sys"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -142,6 +147,7 @@ dependencies = [
 name = "decksterity"
 version = "0.1.0"
 dependencies = [
+ "claxon 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "cpal 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "dsp-chain 0.13.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -435,6 +441,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum cfg-if 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "d4c819a1287eb618df47cc647173c5c4c66ba19d888a6e50d605672aed3140de"
 "checksum clang-sys 0.21.2 (registry+https://github.com/rust-lang/crates.io-index)" = "e414af9726e1d11660801e73ccc7fb81803fb5f49e5903a25b348b2b3b480d2e"
 "checksum clap 2.30.0 (registry+https://github.com/rust-lang/crates.io-index)" = "1c07b9257a00f3fc93b7f3c417fc15607ec7a56823bc2c37ec744e266387de5b"
+"checksum claxon 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ea4ed046a8729cabb48e3574522bff437d951fa16bf3d5a0993ca54f69b893ab"
 "checksum core-foundation-sys 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "716c271e8613ace48344f723b60b900a93150271e5be206212d052bbc0883efa"
 "checksum coreaudio-rs 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "0542568ebe1136d8be7a9032541441d85c2654c230d41499d0c79d74b983209a"
 "checksum coreaudio-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "3514bd984efbc6e996748f139fcbadb00c564533b1a28bebdf9895441befeaa6"

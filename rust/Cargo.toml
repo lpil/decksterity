@@ -16,3 +16,5 @@ path = "src/main.rs"
 cpal = "0.8"
 # Chaining of DSP nodes (MIT)
 dsp-chain = "0.13"
+# FLAC decoder (Apache 2.0)
+claxon = "0.4"
