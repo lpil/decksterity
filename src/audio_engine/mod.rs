@@ -1,4 +1,4 @@
-mod dsp_node;
+pub mod dsp_node;
 
 extern crate cpal;
 extern crate dsp;
@@ -16,7 +16,7 @@ pub type Sample = f32;
 pub type Frame = [Sample; CHANNELS];
 
 pub struct AudioEngine {
-    graph: dsp::Graph<[Sample; CHANNELS], DspNode>,
+    pub graph: dsp::Graph<[Sample; CHANNELS], DspNode>,
     deck_graph_index: dsp::NodeIndex,
 }
 
@@ -65,30 +65,5 @@ impl AudioEngine {
         }
     }
 
-    pub fn connect_to_output(&mut self) {
-        let device = cpal::default_output_device().expect("Failed to get default output device");
-        let format = device
-            .default_output_format()
-            .expect("Failed to get default output format");
-        let event_loop = cpal::EventLoop::new();
-        let stream_id = event_loop.build_output_stream(&device, &format).unwrap();
-        event_loop.play_stream(stream_id.clone());
-
-        event_loop.run(move |_, data| {
-            let b = match data {
-                cpal::StreamData::Output { buffer: b } => b,
-                _ => return,
-            };
-
-            match b {
-                cpal::UnknownTypeOutputBuffer::F32(mut buffer) => {
-                    let raw_buffer: &mut [Frame] = buffer.to_frame_slice_mut().unwrap();
-                    dsp::slice::equilibrium(raw_buffer);
-                    self.graph.audio_requested(raw_buffer, SAMPLE_HZ);
-                }
-                // TODO: Other output formats
-                _ => return,
-            }
-        });
-    }
+    pub fn connect_to_output(&mut self) {}
 }
