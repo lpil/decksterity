@@ -30,7 +30,10 @@ impl Node<super::Frame> for DspNode {
                     Frame::from_fn(|_| val)
                 })
             }
-            DspNode::Player(_phase, _pitch, ref _samples) => unimplemented!(),
+            DspNode::Player(_phase, _pitch, ref _samples) => {
+                // Not yet!
+                ()
+            }
         }
     }
 }
