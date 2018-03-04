@@ -20,11 +20,11 @@ pub struct AudioEngine {
     deck_graph_index: dsp::NodeIndex,
 }
 
-pub fn construct_audio_graph() -> AudioEngine {
+pub fn new() -> AudioEngine {
     let mut graph = Graph::new();
 
     let master = graph.add_node(DspNode::Master);
-    let master_vol = graph.add_node(DspNode::Volume(0.5));
+    let master_vol = graph.add_node(DspNode::Volume(1.0));
     graph.set_master(Some(master));
 
     graph
@@ -40,7 +40,7 @@ pub fn construct_audio_graph() -> AudioEngine {
 }
 
 impl AudioEngine {
-    pub fn set_deck_media(&mut self, media: media::Media) {
+    pub fn set_media(&mut self, media: media::Media) {
         match self.deck_mut() {
             &mut DspNode::Player(ref mut phase, _pitch, ref mut samples) => {
                 mem::replace(samples, media);
@@ -56,7 +56,16 @@ impl AudioEngine {
             .expect("Deck not found")
     }
 
-    pub fn connect_to_output(mut self) {
+    pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) {
+        match self.deck_mut() {
+            &mut DspNode::Player(_, ref mut pitch, _) => {
+                *pitch = new_pitch;
+            }
+            ref other => panic!("Expected Player, got {:?}", other),
+        }
+    }
+
+    pub fn connect_to_output(&mut self) {
         let device = cpal::default_output_device().expect("Failed to get default output device");
         let format = device
             .default_output_format()

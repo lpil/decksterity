@@ -24,7 +24,7 @@ impl Node<super::Frame> for DspNode {
                 dsp::slice::map_in_place(buffer, |_| {
                     let frame = samples[*phase as usize];
                     // Why is the input audio SUPER loud?
-                    let quiet_frame = frame.map(|s| s * 0.0001);
+                    let quiet_frame = frame.map(|s| s * 0.00003);
                     *phase += pitch;
                     quiet_frame
                 })
