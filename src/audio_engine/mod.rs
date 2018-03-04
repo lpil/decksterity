@@ -20,25 +20,18 @@ pub struct AudioEngine {
     deck_graph_index: dsp::NodeIndex,
 }
 
-const A5_HZ: dsp_node::Frequency = 440.0;
-const D5_HZ: dsp_node::Frequency = 587.33;
-const F5_HZ: dsp_node::Frequency = 698.46;
-
 pub fn construct_audio_graph() -> AudioEngine {
     let mut graph = Graph::new();
 
     let master = graph.add_node(DspNode::Master);
-    let master_vol = graph.add_node(DspNode::Volume(1.0));
+    let master_vol = graph.add_node(DspNode::Volume(0.5));
+    graph.set_master(Some(master));
 
     graph
         .add_connection(master_vol, master)
         .expect("feedback loop");
 
-    let (_, deck_graph_index) = graph.add_input(DspNode::Player(0.0, 0.0, vec![]), master_vol);
-    graph.add_input(DspNode::Oscillator(0.0, A5_HZ, 0.2), master_vol);
-    graph.add_input(DspNode::Oscillator(0.0, D5_HZ, 0.1), master_vol);
-    graph.add_input(DspNode::Oscillator(0.0, F5_HZ, 0.15), master_vol);
-    graph.set_master(Some(master));
+    let (_, deck_graph_index) = graph.add_input(DspNode::Player(0.0, 1.0, vec![]), master_vol);
 
     AudioEngine {
         graph,
