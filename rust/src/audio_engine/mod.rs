@@ -7,12 +7,12 @@ use self::dsp::{Graph, Node};
 use self::dsp::sample::ToFrameSliceMut;
 use self::dsp_node::DspNode;
 
-pub type Output = f32;
-
-pub type AudioEngine = dsp::Graph<[Output; CHANNELS], DspNode>;
-
 pub const CHANNELS: usize = 2;
 pub const SAMPLE_HZ: f64 = 44_100.0;
+
+pub type Sample = f32;
+pub type Frame = [Sample; CHANNELS];
+pub type AudioEngine = dsp::Graph<[Sample; CHANNELS], DspNode>;
 
 const A5_HZ: dsp_node::Frequency = 440.0;
 const D5_HZ: dsp_node::Frequency = 587.33;
@@ -53,7 +53,7 @@ pub fn connect_to_output(mut graph: AudioEngine) {
 
         match b {
             cpal::UnknownTypeOutputBuffer::F32(mut buffer) => {
-                let raw_buffer: &mut [[Output; CHANNELS]] = buffer.to_frame_slice_mut().unwrap();
+                let raw_buffer: &mut [Frame] = buffer.to_frame_slice_mut().unwrap();
                 dsp::slice::equilibrium(raw_buffer);
                 graph.audio_requested(raw_buffer, SAMPLE_HZ);
             }
