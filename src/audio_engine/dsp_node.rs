@@ -1,14 +1,15 @@
 use super::dsp;
 use super::dsp::{Frame, Node, Sample};
 
-pub type Phase = f64;
+pub type IsPlaying = bool;
+pub type Offset = f64;
 pub type Pitch = f64;
 
 #[derive(Debug)]
 pub enum DspNode {
     Master,
     Volume(f32),
-    Player(Phase, Pitch, Vec<super::Frame>),
+    Player(IsPlaying, Offset, Pitch, Vec<super::Frame>),
 }
 
 impl Node<super::Frame> for DspNode {
@@ -20,19 +21,26 @@ impl Node<super::Frame> for DspNode {
             DspNode::Volume(volume) => {
                 dsp::slice::map_in_place(buffer, |frame| frame.map(|s| s.mul_amp(volume)))
             }
-            DspNode::Player(ref mut phase, pitch, ref samples) => {
+            DspNode::Player(false, _, _, _) => {
+                // When not playing the Player does nothing.
+            }
+            DspNode::Player(true, ref mut offset, pitch, ref samples) => {
                 dsp::slice::map_in_place(buffer, |_| {
-                    let frame = samples.get(*phase as usize).unwrap_or_else(|| {
-                        *phase = 0.0;
+                    let frame = samples.get(*offset as usize).unwrap_or_else(|| {
+                        *offset = 0.0;
                         &samples[0]
                     });
 
                     // Why is the input audio SUPER loud?
                     let quiet_frame = frame.map(|s| s * 0.00003);
-                    *phase += pitch;
+                    *offset += pitch;
                     quiet_frame
                 })
             }
         }
     }
+}
+
+pub fn new_player() -> DspNode {
+    DspNode::Player(false, 0.0, 1.0, vec![])
 }

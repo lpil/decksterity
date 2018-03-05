@@ -33,7 +33,7 @@ pub fn new() -> AudioEngine {
         .add_connection(master_vol, master)
         .expect("feedback loop");
 
-    let (_, deck_graph_index) = graph.add_input(DspNode::Player(0.0, 1.0, vec![]), master_vol);
+    let (_, deck_graph_index) = graph.add_input(dsp_node::new_player(), master_vol);
 
     AudioEngine {
         graph,
@@ -44,9 +44,27 @@ pub fn new() -> AudioEngine {
 impl AudioEngine {
     pub fn set_media(&mut self, media: media::Media) {
         match self.deck_mut() {
-            &mut DspNode::Player(ref mut phase, _pitch, ref mut samples) => {
+            &mut DspNode::Player(_, ref mut phase, _, ref mut samples) => {
                 mem::replace(samples, media);
                 *phase = 0.0;
+            }
+            ref other => panic!("Expected Player, got {:?}", other),
+        }
+    }
+
+    pub fn toggle_play_pause(&mut self) {
+        match self.deck_mut() {
+            &mut DspNode::Player(ref mut is_playing, _, _, _) => {
+                *is_playing = !*is_playing;
+            }
+            ref other => panic!("Expected Player, got {:?}", other),
+        }
+    }
+
+    pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) {
+        match self.deck_mut() {
+            &mut DspNode::Player(_, _, ref mut pitch, _) => {
+                *pitch = new_pitch;
             }
             ref other => panic!("Expected Player, got {:?}", other),
         }
@@ -57,17 +75,6 @@ impl AudioEngine {
             .node_mut(self.deck_graph_index)
             .expect("Deck not found")
     }
-
-    pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) {
-        match self.deck_mut() {
-            &mut DspNode::Player(_, ref mut pitch, _) => {
-                *pitch = new_pitch;
-            }
-            ref other => panic!("Expected Player, got {:?}", other),
-        }
-    }
-
-    pub fn connect_to_output(&mut self) {}
 }
 
 pub fn connect_to_output(engine: Arc<RwLock<AudioEngine>>) {

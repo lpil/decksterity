@@ -2,7 +2,9 @@ extern crate cpal;
 extern crate dsp;
 extern crate lib;
 
-use std::{thread, time};
+use std::io::Read;
+
+use std::thread;
 use std::sync::{Arc, RwLock};
 use lib::{audio_engine, media};
 
@@ -15,17 +17,20 @@ fn main() {
 
     {
         let engine = Arc::clone(&engine_arc);
-        let mut i = 1.0;
-        let mut step = 0.025;
-        thread::spawn(move || loop {
-            if i <= 0.2 || i >= 1.0 {
-                step = 0.0 - step;
-            };
 
-            i = i + step;
-            println!("Setting pitch to {}", i);
-            engine.write().unwrap().set_pitch(i);
-            thread::sleep(time::Duration::from_millis(250));
+        thread::spawn(move || loop {
+            let c = std::io::stdin()
+                .bytes()
+                .next()
+                .and_then(|result| result.ok())
+                .map(|byte| byte as char);
+            match c {
+                Some('\n') => engine
+                    .write()
+                    .expect("unable to acquire write lock")
+                    .toggle_play_pause(),
+                _ => (),
+            }
         });
     }
 
