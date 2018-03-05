@@ -1,10 +1,10 @@
-pub mod dsp_node;
+mod dsp_node;
 
 extern crate cpal;
 extern crate dsp;
 
 use std::mem;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 use super::media;
 use self::dsp::Node;
 use self::dsp::sample::ToFrameSliceMut;
@@ -70,7 +70,7 @@ impl AudioEngine {
     pub fn connect_to_output(&mut self) {}
 }
 
-pub fn connect_to_output(engine: Arc<Mutex<AudioEngine>>) {
+pub fn connect_to_output(engine: Arc<RwLock<AudioEngine>>) {
     let device = cpal::default_output_device().expect("Failed to get default output device");
     let format = device
         .default_output_format()
@@ -90,7 +90,7 @@ pub fn connect_to_output(engine: Arc<Mutex<AudioEngine>>) {
                 let raw_buffer: &mut [Frame] = buffer.to_frame_slice_mut().unwrap();
                 dsp::slice::equilibrium(raw_buffer);
                 engine
-                    .lock()
+                    .write()
                     .unwrap()
                     .graph
                     .audio_requested(raw_buffer, SAMPLE_HZ);

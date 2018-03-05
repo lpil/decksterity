@@ -3,7 +3,7 @@ extern crate dsp;
 extern crate lib;
 
 use std::{thread, time};
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, RwLock};
 use lib::{audio_engine, media};
 
 fn main() {
@@ -11,7 +11,7 @@ fn main() {
     let mut engine = audio_engine::new();
     engine.set_media(media);
 
-    let engine_arc = Arc::new(Mutex::new(engine));
+    let engine_arc = Arc::new(RwLock::new(engine));
 
     {
         let engine = Arc::clone(&engine_arc);
@@ -24,7 +24,7 @@ fn main() {
 
             i = i + step;
             println!("Setting pitch to {}", i);
-            engine.lock().unwrap().set_pitch(i);
+            engine.write().unwrap().set_pitch(i);
             thread::sleep(time::Duration::from_millis(250));
         });
     }
