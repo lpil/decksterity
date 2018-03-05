@@ -12,11 +12,11 @@ name = "decksterity"
 path = "src/main.rs"
 
 [dependencies]
-# Cross platform audio IO (Apache 2.0)
-cpal = "0.8"
 # Chaining of DSP nodes (MIT)
 dsp-chain = "0.13"
 # FLAC decoder (Apache 2.0)
 claxon = "0.4"
 # MIDI processing (MIT)
 midir = "0.5"
+# JACK audio server client (MIT)
+jack = "0.6.0-rc1"

@@ -1,7 +1,7 @@
 extern crate midir;
 
 use self::midir::{Ignore, MidiInput, MidiInputConnection};
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, Mutex};
 use super::audio_engine::AudioEngine;
 
 type Ctrl = (u8, u8);
@@ -11,7 +11,7 @@ const TOP_ENCODER_4_TURN: Ctrl = (190, 3);
 const TOP_ENCODER_4_PRESS: Ctrl = (158, 55);
 const SLIDER_4: Ctrl = (190, 19);
 
-pub fn connect_xone_k2(engine: Arc<RwLock<AudioEngine>>) -> MidiInputConnection<()> {
+pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> MidiInputConnection<()> {
     // Set up MIDI input
     let mut midi_in = MidiInput::new("xone:k2").expect("Unable to create MIDI input");
     midi_in.ignore(Ignore::All);
@@ -24,20 +24,20 @@ pub fn connect_xone_k2(engine: Arc<RwLock<AudioEngine>>) -> MidiInputConnection<
         assert_eq!(msg.len(), 3);
         match ((msg[0], msg[1]), msg[2]) {
             (TOP_ENCODER_4_TURN, 1) => {
-                let new_pitch = engine.write().unwrap().adjust_pitch(PITCH_STEP);
+                let new_pitch = engine.lock().unwrap().adjust_pitch(PITCH_STEP);
                 println!("Pitch: {:?}", new_pitch);
             }
             (TOP_ENCODER_4_TURN, 127) => {
-                let new_pitch = engine.write().unwrap().adjust_pitch(-PITCH_STEP);
+                let new_pitch = engine.lock().unwrap().adjust_pitch(-PITCH_STEP);
                 println!("Pitch: {:?}", new_pitch);
             }
             (TOP_ENCODER_4_PRESS, 127) => {
-                let is_playing = engine.write().unwrap().toggle_play_pause();
+                let is_playing = engine.lock().unwrap().toggle_play_pause();
                 println!("Playing: {:?}", is_playing);
             }
             (SLIDER_4, velocity) => {
                 let volume = (velocity as f32) / 127.0;
-                engine.write().unwrap().set_volume(volume);
+                engine.lock().unwrap().set_volume(volume);
                 println!("Volume: {:?}", volume);
             }
             _ => println!("{:?}", msg),
