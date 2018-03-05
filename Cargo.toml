@@ -18,3 +18,5 @@ cpal = "0.8"
 dsp-chain = "0.13"
 # FLAC decoder (Apache 2.0)
 claxon = "0.4"
+# MIDI processing (MIT)
+midir = "0.5"

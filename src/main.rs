@@ -2,37 +2,21 @@ extern crate cpal;
 extern crate dsp;
 extern crate lib;
 
-use std::io::Read;
-
-use std::thread;
 use std::sync::{Arc, RwLock};
 use lib::{audio_engine, media};
 
 fn main() {
+    // Set up deck
     let media = media::read_flac("./media/short-techno.flac".to_string());
     let mut engine = audio_engine::new();
     engine.set_media(media);
-
     let engine_arc = Arc::new(RwLock::new(engine));
 
-    {
-        let engine = Arc::clone(&engine_arc);
+    // Set up MIDI input
+    // _conn_in needs to be a named parameter because it needs to be kept
+    // alive until the end of the scope
+    let _conn_in = lib::midi::connect_xone_k2(Arc::clone(&engine_arc));
 
-        thread::spawn(move || loop {
-            let c = std::io::stdin()
-                .bytes()
-                .next()
-                .and_then(|result| result.ok())
-                .map(|byte| byte as char);
-            match c {
-                Some('\n') => engine
-                    .write()
-                    .expect("unable to acquire write lock")
-                    .toggle_play_pause(),
-                _ => (),
-            }
-        });
-    }
-
+    // Start your engines
     audio_engine::connect_to_output(engine_arc);
 }

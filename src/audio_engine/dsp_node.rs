@@ -4,11 +4,12 @@ use super::dsp::{Frame, Node, Sample};
 pub type IsPlaying = bool;
 pub type Offset = f64;
 pub type Pitch = f64;
+pub type Amp = f32;
 
 #[derive(Debug)]
 pub enum DspNode {
     Master,
-    Volume(f32),
+    Volume(Amp),
     Player(IsPlaying, Offset, Pitch, Vec<super::Frame>),
 }
 
