@@ -1,6 +1,4 @@
-extern crate midir;
-
-use self::midir::{Ignore, MidiInput, MidiInputConnection};
+use midir::{Ignore, MidiInput, MidiInputConnection};
 use std::sync::{Arc, Mutex};
 use super::audio_engine::AudioEngine;
 

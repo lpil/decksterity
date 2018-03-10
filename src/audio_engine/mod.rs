@@ -1,10 +1,9 @@
 mod dsp_node;
 
-extern crate dsp;
-
 use std::mem;
 use super::media;
-use self::dsp::Graph;
+use dsp;
+use dsp::Graph;
 use self::dsp_node::DspNode;
 
 pub const CHANNELS: usize = 2;
