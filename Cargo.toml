@@ -20,3 +20,11 @@ claxon = "0.4"
 midir = "0.5"
 # JACK audio server client (MIT)
 jack = "0.6.0-rc1"
+
+# 2D GUI (MIT or Apache 2.0)
+conrod = { version = "0.58", features = ["glium", "winit"] }
+conrod_derive = "0.1"
+# OpenGL wrapper (Apache 2.0
+glium = "0.20"
+# Window wrapper (Apache 2.0
+winit = "0.11"

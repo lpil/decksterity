@@ -1,6 +1,6 @@
-extern crate claxon;
-
 use super::audio_engine;
+
+use claxon;
 
 pub type Media = Vec<audio_engine::Frame>;
 
