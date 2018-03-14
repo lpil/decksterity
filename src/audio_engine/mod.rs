@@ -1,10 +1,9 @@
 mod dsp_node;
 
-use std::mem;
-use super::media;
 use dsp;
 use dsp::Graph;
 use self::dsp_node::DspNode;
+use super::media;
 
 pub const CHANNELS: usize = 2;
 
@@ -21,7 +20,7 @@ pub fn new() -> AudioEngine {
     let mut graph = Graph::new();
 
     let master = graph.add_node(DspNode::Master);
-    let master_vol = graph.add_node(DspNode::Volume(0.0));
+    let master_vol = graph.add_node(dsp_node::new_volume());
     graph.set_master(Some(master));
 
     graph
@@ -38,67 +37,43 @@ pub fn new() -> AudioEngine {
 }
 
 impl AudioEngine {
-    pub fn set_volume(&mut self, volume: dsp_node::Amp) -> dsp_node::Amp {
-        match self.master_volume_mut() {
-            &mut DspNode::Volume(ref mut v) => {
-                mem::replace(v, volume);
-                volume
-            }
-            ref other => panic!("Expected Player, got {:?}", other),
-        }
+    pub fn set_volume(&mut self, amount: f32) -> f32 {
+        self.master_volume_mut().set_volume(amount)
     }
 
     pub fn set_media(&mut self, media: media::Media) {
-        match self.deck_mut() {
-            &mut DspNode::Player(_, ref mut phase, _, ref mut samples) => {
-                mem::replace(samples, media);
-                *phase = 0.0;
-            }
-            ref other => panic!("Expected Player, got {:?}", other),
-        }
+        self.deck_mut().set_media(media)
     }
 
-    pub fn toggle_play_pause(&mut self) -> dsp_node::IsPlaying {
-        match self.deck_mut() {
-            &mut DspNode::Player(ref mut is_playing, _, _, _) => {
-                let new_value = !*is_playing;
-                *is_playing = new_value;
-                new_value
-            }
-            ref other => panic!("Expected Player, got {:?}", other),
-        }
+    pub fn toggle_play_pause(&mut self) -> bool {
+        self.deck_mut().toggle_play_pause()
     }
 
     pub fn adjust_pitch(&mut self, delta: dsp_node::Pitch) -> dsp_node::Pitch {
-        match self.deck_mut() {
-            &mut DspNode::Player(_, _, ref mut pitch, _) => {
-                let new_pitch = *pitch + delta;
-                *pitch = new_pitch;
-                new_pitch
-            }
-            ref other => panic!("Expected Player, got {:?}", other),
-        }
+        self.deck_mut().adjust_pitch(delta)
     }
 
     pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) -> dsp_node::Pitch {
-        match self.deck_mut() {
-            &mut DspNode::Player(_, _, ref mut pitch, _) => {
-                *pitch = new_pitch;
-                new_pitch
-            }
+        self.deck_mut().set_pitch(new_pitch)
+    }
+
+    fn deck_mut(&mut self) -> &mut dsp_node::Player {
+        let node = self.graph
+            .node_mut(self.deck_graph_index)
+            .expect("Deck not found");
+        match node {
+            &mut DspNode::Player(ref mut buffer_player) => buffer_player,
             ref other => panic!("Expected Player, got {:?}", other),
         }
     }
 
-    fn deck_mut(&mut self) -> &mut DspNode {
-        self.graph
-            .node_mut(self.deck_graph_index)
-            .expect("Deck not found")
-    }
-
-    fn master_volume_mut(&mut self) -> &mut DspNode {
-        self.graph
+    fn master_volume_mut(&mut self) -> &mut dsp_node::Volume {
+        let node = self.graph
             .node_mut(self.master_vol_index)
-            .expect("Master Volume not found")
+            .expect("Master Volume not found");
+        match node {
+            &mut DspNode::Volume(ref mut volume) => volume,
+            ref other => panic!("Expected volume, got {:?}", other),
+        }
     }
 }
