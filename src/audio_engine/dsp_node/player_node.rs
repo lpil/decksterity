@@ -47,11 +47,11 @@ impl PlayerNode {
         *offset = 0.0;
     }
 
-    pub fn set_pitch(&mut self, new_pitch: f64) -> f64 {
-        let Self { ref mut pitch, .. } = *self;
-        *pitch = new_pitch;
-        new_pitch
-    }
+    //     pub fn set_pitch(&mut self, new_pitch: f64) -> f64 {
+    //         let Self { ref mut pitch, .. } = *self;
+    //         *pitch = new_pitch;
+    //         new_pitch
+    //     }
 }
 
 impl Node<audio_engine::Frame> for PlayerNode {

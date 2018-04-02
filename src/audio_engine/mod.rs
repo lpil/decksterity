@@ -53,9 +53,9 @@ impl AudioEngine {
         self.deck_mut().adjust_pitch(delta)
     }
 
-    pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) -> dsp_node::Pitch {
-        self.deck_mut().set_pitch(new_pitch)
-    }
+    // pub fn set_pitch(&mut self, new_pitch: dsp_node::Pitch) -> dsp_node::Pitch {
+    //     self.deck_mut().set_pitch(new_pitch)
+    // }
 
     fn deck_mut(&mut self) -> &mut dsp_node::Player {
         let node = self.graph
