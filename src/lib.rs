@@ -9,6 +9,9 @@ extern crate jack;
 extern crate lazy_static;
 extern crate midir;
 extern crate regex;
+#[macro_use]
+extern crate serde_derive;
+extern crate toml;
 extern crate walkdir;
 
 mod library;
