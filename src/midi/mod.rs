@@ -34,7 +34,7 @@ pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> MidiInputConnection<(
                 println!("Playing: {:?}", is_playing);
             }
             (SLIDER_4, velocity) => {
-                let volume = (velocity as f32) / 127.0;
+                let volume = f32::from(velocity) / 127.0;
                 engine.lock().unwrap().set_volume(volume);
                 println!("Volume: {:?}", volume);
             }

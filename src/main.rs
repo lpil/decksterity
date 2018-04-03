@@ -4,8 +4,8 @@ extern crate lib;
 
 use clap::{App, AppSettings, SubCommand};
 
-const MIX: &'static str = "mix";
-const SCAN: &'static str = "scan";
+const MIX: &str = "mix";
+const SCAN: &str = "scan";
 
 fn main() {
     let matches = App::new("decksterity")

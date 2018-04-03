@@ -33,7 +33,7 @@ pub fn scan() {
         .take(5)
         .filter_map(|result| result.ok())
         .map(|dir_entry| dir_entry.path().to_path_buf())
-        .filter_map(|entry| to_track(entry, &config))
+        .filter_map(|entry| to_track(&entry, &config))
         .collect();
 
     println!("{:?}", files);
@@ -46,7 +46,7 @@ lazy_static! {
         .expect("Invalid Regex: TRACK_REGEX");
 }
 
-fn to_track(path_buf: PathBuf, config: &Config) -> Option<Track> {
+fn to_track(path_buf: &PathBuf, config: &Config) -> Option<Track> {
     let prefix = &config.library_base_path;
     let relative_path = path_buf.strip_prefix(Path::new(prefix)).ok()?;
 
@@ -80,13 +80,13 @@ mod tests {
         };
 
         // These shouldn't be possible
-        assert_eq!(to_track(pb(""), &cfg), None);
-        assert_eq!(to_track(pb("no-root.flac"), &cfg), None);
-        assert_eq!(to_track(pb("other/root/foo.flac"), &cfg), None);
+        assert_eq!(to_track(&pb(""), &cfg), None);
+        assert_eq!(to_track(&pb("no-root.flac"), &cfg), None);
+        assert_eq!(to_track(&pb("other/root/foo.flac"), &cfg), None);
 
         // Full track
         let track = to_track(
-            pb("etc/01 Captain Credible - Rip your Nips off (180 BPM).flac"),
+            &pb("etc/01 Captain Credible - Rip your Nips off (180 BPM).flac"),
             &cfg,
         ).expect("etc/foo.flac should to_track ok");
 
@@ -100,28 +100,28 @@ mod tests {
         );
 
         // Track minus BPM and number
-        let track = to_track(pb("etc/Captain Credible - Rip your Nips off.flac"), &cfg)
+        let track = to_track(&pb("etc/Captain Credible - Rip your Nips off.flac"), &cfg)
             .expect("etc/foo.flac should to_track ok");
 
         assert_eq!(track.title, Some("Rip your Nips off".to_string()));
         assert_eq!(track.artist, Some("Captain Credible".to_string()));
         assert_eq!(track.bpm, None);
-        assert_eq!(track.path, pb("Captain Credible - Rip your Nips off.flac"));
+        assert_eq!(track.path, &pb("Captain Credible - Rip your Nips off.flac"));
 
         // Valid extensions
-        assert!(to_track(pb("etc/foo.flac"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.FLAC"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.wav"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.WAV"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.ogg"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.OGG"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.mp3"), &cfg).is_some());
-        assert!(to_track(pb("etc/foo.MP3"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.flac"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.FLAC"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.wav"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.WAV"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.ogg"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.OGG"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.mp3"), &cfg).is_some());
+        assert!(to_track(&pb("etc/foo.MP3"), &cfg).is_some());
 
         // Invalid extensions
-        assert!(to_track(pb("etc/foo.txt"), &cfg).is_none());
-        assert!(to_track(pb("etc/foo.png"), &cfg).is_none());
-        assert!(to_track(pb("etc/foo.jpg"), &cfg).is_none());
-        assert!(to_track(pb("etc/foo"), &cfg).is_none());
+        assert!(to_track(&pb("etc/foo.txt"), &cfg).is_none());
+        assert!(to_track(&pb("etc/foo.png"), &cfg).is_none());
+        assert!(to_track(&pb("etc/foo.jpg"), &cfg).is_none());
+        assert!(to_track(&pb("etc/foo"), &cfg).is_none());
     }
 }

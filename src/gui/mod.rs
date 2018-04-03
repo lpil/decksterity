@@ -8,8 +8,7 @@ use conrod::backend::glium::glium::Surface;
 use conrod::text::FontCollection;
 use self::constants::*;
 
-const NOTO_SANS_REGULAR: &'static [u8] =
-    include_bytes!("../../assets/fonts/NotoSans/NotoSans-Regular.ttf");
+const NOTO_SANS_REGULAR: &[u8] = include_bytes!("../../assets/fonts/NotoSans/NotoSans-Regular.ttf");
 
 const INITIAL_WIDTH: u32 = 800;
 const INITIAL_HEIGHT: u32 = 600;
@@ -38,7 +37,8 @@ pub fn start() {
     let display = glium::Display::new(window, context, &events_loop).unwrap();
 
     // construct our `Ui`.
-    let mut ui = conrod::UiBuilder::new([INITIAL_WIDTH as f64, INITIAL_HEIGHT as f64]).build();
+    let mut ui =
+        conrod::UiBuilder::new([f64::from(INITIAL_WIDTH), f64::from(INITIAL_HEIGHT)]).build();
 
     let font = FontCollection::from_bytes(NOTO_SANS_REGULAR)
         .into_font()
@@ -66,19 +66,17 @@ pub fn start() {
                 event_loop.needs_update();
             }
 
-            match event {
-                glium::glutin::Event::WindowEvent { event, .. } => match event {
+            if let glium::glutin::Event::WindowEvent { event, .. } = event {
+                if let glium::glutin::WindowEvent::Closed = event {
                     // TODO: Ask for confirmation here. Or don't close if deck playing.
                     // Break from the loop when window closed.
-                    glium::glutin::WindowEvent::Closed => break 'main,
-                    _ => (),
-                },
-                _ => (),
+                    break 'main;
+                }
             }
         }
 
         // Instantiate all widgets in the GUI.
-        set_widgets(ui.set_widgets(), ids);
+        set_widgets(&mut ui.set_widgets(), ids);
 
         // Render the `Ui` and then display it on the screen.
         if let Some(primitives) = ui.draw_if_changed() {
@@ -92,7 +90,7 @@ pub fn start() {
 }
 
 // Draw the Ui.
-fn set_widgets(ref mut ui: conrod::UiCell, ids: &mut Ids) {
+fn set_widgets(ui: &mut conrod::UiCell, ids: &mut Ids) {
     use conrod::{widget, Positionable, Widget};
 
     widget::Canvas::new()

@@ -3,7 +3,8 @@ use super::constants::*;
 
 #[derive(WidgetCommon)]
 pub struct Deck {
-    #[conrod(common_builder)] common: widget::CommonBuilder,
+    #[conrod(common_builder)]
+    common: widget::CommonBuilder,
     style: Style,
 }
 
@@ -47,7 +48,7 @@ impl Widget for Deck {
     }
 
     fn style(&self) -> Self::Style {
-        self.style.clone()
+        self.style
     }
 
     /// Update the state of the button by handling any input that has occurred since the last
