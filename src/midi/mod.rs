@@ -9,14 +9,13 @@ const TOP_ENCODER_4_TURN: Ctrl = (190, 3);
 const TOP_ENCODER_4_PRESS: Ctrl = (158, 55);
 const SLIDER_4: Ctrl = (190, 19);
 
-pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> MidiInputConnection<()> {
+pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> Option<MidiInputConnection<()>> {
     // Set up MIDI input
     let mut midi_in = MidiInput::new("xone:k2").expect("Unable to create MIDI input");
     midi_in.ignore(Ignore::All);
 
     let in_port = (0..midi_in.port_count())
-        .find(|i| midi_in.port_name(*i) == Ok("XONE:K2 20:0".to_string()))
-        .unwrap_or_else(|| panic!("Unable to find XONE:K2 midi input"));
+        .find(|i| midi_in.port_name(*i) == Ok("XONE:K2 20:0".to_string()))?;
 
     let handle_msg = move |msg: &[u8]| {
         assert_eq!(msg.len(), 3);
@@ -44,7 +43,8 @@ pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> MidiInputConnection<(
 
     // _conn_in needs to be a named parameter because it needs to be kept
     // alive until the end of the scope
-    midi_in
+    let input = midi_in
         .connect(in_port, "xone:k2-in", move |_, msg, _| handle_msg(msg), ())
-        .expect("Unable to connect to XONE:K2 input")
+        .expect("Unable to connect to XONE:K2 input");
+    Some(input)
 }

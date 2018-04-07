@@ -9,6 +9,7 @@ extern crate jack;
 extern crate lazy_static;
 extern crate midir;
 extern crate regex;
+extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate toml;
@@ -19,6 +20,7 @@ mod audio_engine;
 mod media;
 mod midi;
 mod gui;
+mod persistance;
 
 use std::sync::{Arc, Mutex};
 use dsp::Node;
@@ -28,10 +30,13 @@ pub use library::scan;
 const MASTER_AMP: f32 = 0.01;
 
 pub fn mix() {
+    // Load track library
+    let _tracks = persistance::load_tracks_state().unwrap();
+
     // Set up deck
-    let media = media::read_flac("./media/short-techno.flac".to_string());
     let mut engine = audio_engine::new();
-    engine.set_media(media);
+    // let _media = media::read_flac("./media/short-techno.flac".to_string());
+    // engine.set_media(media);
     let engine_arc = Arc::new(Mutex::new(engine));
 
     // Set up MIDI input

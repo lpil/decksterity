@@ -1,21 +1,11 @@
 use walkdir::WalkDir;
 use regex::Regex;
 use std::path::{Path, PathBuf};
-use toml;
-use std::fs;
-use std::fs::File;
-use std::io::Write;
-
+use super::persistance;
 use std::collections::HashMap;
 
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
-struct TracksState {
-    version: u8,
-    tracks: HashMap<String, Track>,
-}
-
-#[derive(Debug, PartialEq, Deserialize, Serialize)]
-struct Track {
+pub struct Track {
     title: Option<String>,
     artist: Option<String>,
     number: Option<u8>,
@@ -23,6 +13,7 @@ struct Track {
     path: PathBuf,
 }
 
+#[derive(Debug, PartialEq, Deserialize, Serialize)]
 struct Config {
     library_base_path: String,
 }
@@ -36,9 +27,7 @@ fn load_config() -> Config {
 }
 
 pub fn scan() {
-    println!("Starting scan...");
     let config = load_config();
-
     let mut tracks = HashMap::new();
 
     WalkDir::new(config.library_base_path.clone())
@@ -51,18 +40,7 @@ pub fn scan() {
             tracks.insert(track.path.to_str().unwrap().to_string(), track);
         });
 
-    let tracks_state = TracksState { version: 1, tracks };
-
-    let toml = toml::to_string(&tracks_state).unwrap();
-
-    let data_dir = "/home/louis/.local/share/decksterity";
-    fs::create_dir_all(data_dir).expect(&format!("Unable to create {}", data_dir));
-
-    let tracks_file = format!("{}/tracks.toml", data_dir);
-    File::create(&tracks_file)
-        .expect("Unable to create tracks file")
-        .write_all(toml.as_bytes())
-        .expect("Unable to write tracks file");
+    persistance::write_tracks_state(tracks).unwrap();
 }
 
 lazy_static! {
