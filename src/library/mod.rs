@@ -2,15 +2,20 @@ use walkdir::WalkDir;
 use regex::Regex;
 use std::path::{Path, PathBuf};
 use super::persistance;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 pub struct Track {
-    title: Option<String>,
-    artist: Option<String>,
-    number: Option<u8>,
-    bpm: Option<f32>,
-    path: PathBuf,
+    pub title: Option<String>,
+    pub artist: Option<String>,
+    pub number: Option<u8>,
+    pub bpm: Option<f32>,
+    pub path: PathBuf,
+}
+
+#[derive(Debug, PartialEq)]
+pub struct Library {
+    pub tracks: BTreeMap<String, Track>,
 }
 
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
@@ -28,7 +33,7 @@ fn load_config() -> Config {
 
 pub fn scan() {
     let config = load_config();
-    let mut tracks = HashMap::new();
+    let mut tracks = BTreeMap::new();
 
     WalkDir::new(config.library_base_path.clone())
         .follow_links(true)
@@ -53,7 +58,7 @@ lazy_static! {
         .expect("Invalid Regex: TRACK_REGEX");
 }
 
-fn extract_bpm(full_title: &String) -> Option<(String, f32)> {
+fn extract_bpm(full_title: &str) -> Option<(String, f32)> {
     let title_captures = TRACK_BPM_REGEX.captures(full_title)?;
 
     let title = title_captures

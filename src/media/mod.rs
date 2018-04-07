@@ -1,8 +1,8 @@
-use super::audio_engine;
+use super::engine;
 
 use claxon;
 
-pub type Media = Vec<audio_engine::Frame>;
+pub type Media = Vec<engine::Frame>;
 
 pub fn read_flac(path: String) -> Media {
     let mut reader = claxon::FlacReader::open(path).expect("Unable to open FLAC file");
@@ -11,7 +11,7 @@ pub fn read_flac(path: String) -> Media {
     let mut frames = Vec::with_capacity(capacity);
 
     while let (Some(Ok(l)), Some(Ok(r))) = (samples.next(), samples.next()) {
-        frames.push([l as audio_engine::Sample, r as audio_engine::Sample]);
+        frames.push([l as engine::Sample, r as engine::Sample]);
     }
 
     frames.shrink_to_fit();

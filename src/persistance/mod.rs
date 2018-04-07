@@ -4,7 +4,7 @@ use std::{convert, fs};
 use std::fs::File;
 use std::io;
 use std::io::{Read, Write};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 
 #[derive(Debug)]
 pub enum Error {
@@ -34,7 +34,7 @@ impl convert::From<toml::ser::Error> for Error {
 #[derive(Debug, PartialEq, Deserialize, Serialize)]
 pub struct TracksState {
     version: u8,
-    tracks: HashMap<String, Track>,
+    tracks: BTreeMap<String, Track>,
 }
 
 fn data_dir() -> String {
@@ -45,14 +45,14 @@ fn tracks_file() -> String {
     format!("{}/tracks.toml", data_dir())
 }
 
-pub fn write_tracks_state(tracks: HashMap<String, Track>) -> Result<(), Error> {
+pub fn write_tracks_state(tracks: BTreeMap<String, Track>) -> Result<(), Error> {
     let state = TracksState { version: 1, tracks };
     fs::create_dir_all(data_dir())?;
     File::create(tracks_file())?.write_all(toml::to_string(&state)?.as_bytes())?;
     Ok(())
 }
 
-pub fn load_tracks_state() -> Result<HashMap<String, Track>, Error> {
+pub fn load_tracks_state() -> Result<BTreeMap<String, Track>, Error> {
     let mut toml = String::new();
     File::open(tracks_file())?.read_to_string(&mut toml)?;
     let state: TracksState = toml::from_str(&toml)?;

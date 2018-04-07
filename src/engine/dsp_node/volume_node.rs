@@ -1,6 +1,6 @@
 use dsp::{Frame, Node, Sample};
 use super::super::dsp;
-use super::super::super::audio_engine;
+use super::super::super::engine;
 
 #[derive(Debug)]
 pub struct VolumeNode {
@@ -18,8 +18,8 @@ impl VolumeNode {
     }
 }
 
-impl Node<audio_engine::Frame> for VolumeNode {
-    fn audio_requested(&mut self, out_buffer: &mut [audio_engine::Frame], _sample_hz: f64) {
+impl Node<engine::Frame> for VolumeNode {
+    fn audio_requested(&mut self, out_buffer: &mut [engine::Frame], _sample_hz: f64) {
         dsp::slice::map_in_place(out_buffer, |frame| frame.map(|s| s.mul_amp(self.amount)))
     }
 }

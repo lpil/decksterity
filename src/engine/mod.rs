@@ -4,39 +4,40 @@ use dsp;
 use dsp::Graph;
 use self::dsp_node::DspNode;
 use super::media;
+use super::library::Library;
 
 pub const CHANNELS: usize = 2;
 
 pub type Sample = f32;
 pub type Frame = [Sample; CHANNELS];
 
-pub struct AudioEngine {
+pub struct Engine {
     pub graph: dsp::Graph<[Sample; CHANNELS], DspNode>,
     deck_graph_index: dsp::NodeIndex,
     master_vol_index: dsp::NodeIndex,
 }
 
-pub fn new() -> AudioEngine {
+pub fn new() -> Engine {
     let mut graph = Graph::new();
 
     let master = graph.add_node(DspNode::Master);
-    let master_vol = graph.add_node(dsp_node::new_volume());
+    let master_vol_index = graph.add_node(dsp_node::new_volume());
     graph.set_master(Some(master));
 
     graph
-        .add_connection(master_vol, master)
+        .add_connection(master_vol_index, master)
         .expect("graph feedback loop");
 
-    let (_, deck_graph_index) = graph.add_input(dsp_node::new_player(), master_vol);
+    let (_, deck_graph_index) = graph.add_input(dsp_node::new_player(), master_vol_index);
 
-    AudioEngine {
+    Engine {
         graph,
         deck_graph_index,
-        master_vol_index: master_vol,
+        master_vol_index,
     }
 }
 
-impl AudioEngine {
+impl Engine {
     pub fn set_volume(&mut self, amount: f32) -> f32 {
         self.master_volume_mut().set_volume(amount)
     }

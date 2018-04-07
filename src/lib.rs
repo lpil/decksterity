@@ -16,7 +16,7 @@ extern crate toml;
 extern crate walkdir;
 
 mod library;
-mod audio_engine;
+mod engine;
 mod media;
 mod midi;
 mod gui;
@@ -34,7 +34,7 @@ pub fn mix() {
     let _tracks = persistance::load_tracks_state().unwrap();
 
     // Set up deck
-    let mut engine = audio_engine::new();
+    let mut engine = engine::new();
     // let _media = media::read_flac("./media/short-techno.flac".to_string());
     // engine.set_media(media);
     let engine_arc = Arc::new(Mutex::new(engine));

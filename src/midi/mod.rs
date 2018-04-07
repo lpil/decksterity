@@ -1,6 +1,6 @@
 use midir::{Ignore, MidiInput, MidiInputConnection};
 use std::sync::{Arc, Mutex};
-use super::audio_engine::AudioEngine;
+use super::engine::Engine;
 
 type Ctrl = (u8, u8);
 
@@ -9,7 +9,7 @@ const TOP_ENCODER_4_TURN: Ctrl = (190, 3);
 const TOP_ENCODER_4_PRESS: Ctrl = (158, 55);
 const SLIDER_4: Ctrl = (190, 19);
 
-pub fn connect_xone_k2(engine: Arc<Mutex<AudioEngine>>) -> Option<MidiInputConnection<()>> {
+pub fn connect_xone_k2(engine: Arc<Mutex<Engine>>) -> Option<MidiInputConnection<()>> {
     // Set up MIDI input
     let mut midi_in = MidiInput::new("xone:k2").expect("Unable to create MIDI input");
     midi_in.ignore(Ignore::All);

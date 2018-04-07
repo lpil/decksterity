@@ -1,14 +1,14 @@
 use std::mem;
 use super::super::{dsp, media};
 use dsp::{Frame, Node};
-use super::super::super::audio_engine;
+use super::super::super::engine;
 
 #[derive(Debug)]
 pub struct PlayerNode {
     is_playing: bool,
     offset: f64,
     pitch: f64,
-    buffer: Vec<audio_engine::Frame>,
+    buffer: Vec<engine::Frame>,
 }
 
 impl PlayerNode {
@@ -54,8 +54,8 @@ impl PlayerNode {
     //     }
 }
 
-impl Node<audio_engine::Frame> for PlayerNode {
-    fn audio_requested(&mut self, out_buffer: &mut [audio_engine::Frame], _sample_hz: f64) {
+impl Node<engine::Frame> for PlayerNode {
+    fn audio_requested(&mut self, out_buffer: &mut [engine::Frame], _sample_hz: f64) {
         if !self.is_playing {
             return; // When not playing the Player does nothing.
         }
