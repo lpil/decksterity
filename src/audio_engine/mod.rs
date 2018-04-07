@@ -25,7 +25,7 @@ pub fn new() -> AudioEngine {
 
     graph
         .add_connection(master_vol, master)
-        .expect("feedback loop");
+        .expect("graph feedback loop");
 
     let (_, deck_graph_index) = graph.add_input(dsp_node::new_player(), master_vol);
 
