@@ -19,7 +19,7 @@ struct Config {
 ///
 fn load_config() -> Config {
     Config {
-        library_base_path: "/home/louis/data/new-music".to_string(),
+        library_base_path: "/home/louis/data/new-music/".to_string(),
     }
 }
 
@@ -30,7 +30,6 @@ pub fn scan() {
     let files: Vec<_> = WalkDir::new(config.library_base_path.clone())
         .follow_links(true)
         .into_iter()
-        .take(5)
         .filter_map(|result| result.ok())
         .map(|dir_entry| dir_entry.path().to_path_buf())
         .filter_map(|entry| to_track(&entry, &config))
@@ -44,6 +43,24 @@ lazy_static! {
     static ref TRACK_REGEX: Regex = Regex::new(
         r"(?i)((?P<number>\d+) )?((?P<artist>[^/]+) - )?(?P<title>[^/]+)\.(?P<extension>flac|mp3|ogg|wav)$")
         .expect("Invalid Regex: TRACK_REGEX");
+
+    static ref TRACK_BPM_REGEX: Regex = Regex::new(
+        r"(?i)(?P<title>.+) \((?P<bpm>\d+(\.\d+)?) BPM\)")
+        .expect("Invalid Regex: TRACK_REGEX");
+}
+
+fn extract_bpm(full_title: &String) -> Option<(String, f32)> {
+    let title_captures = TRACK_BPM_REGEX.captures(full_title)?;
+
+    let title = title_captures
+        .name("title")
+        .map(|e| e.as_str().to_string())?;
+
+    let bpm = title_captures
+        .name("bpm")
+        .and_then(|e| e.as_str().to_string().parse().ok())?;
+
+    Some((title, bpm))
 }
 
 fn to_track(path_buf: &PathBuf, config: &Config) -> Option<Track> {
@@ -52,14 +69,24 @@ fn to_track(path_buf: &PathBuf, config: &Config) -> Option<Track> {
 
     let captures = TRACK_REGEX.captures(path_buf.to_str()?)?;
 
+    let full_title = captures.name("title").map(|e| e.as_str().to_string())?;
+    let (title, bpm) = match extract_bpm(&full_title) {
+        Some((title, bpm)) => (Some(title), Some(bpm)),
+        None => (Some(full_title), None),
+    };
+
+    let artist = captures.name("artist").map(|e| e.as_str().to_string());
+    let number = captures
+        .name("number")
+        .and_then(|e| e.as_str().to_string().parse().ok());
+    let path = relative_path.to_path_buf();
+
     let track = Track {
-        title: captures.name("title").map(|e| e.as_str().to_string()),
-        artist: captures.name("artist").map(|e| e.as_str().to_string()),
-        bpm: None,
-        number: captures
-            .name("number")
-            .and_then(|e| e.as_str().to_string().parse().ok()),
-        path: relative_path.to_path_buf(),
+        title,
+        artist,
+        bpm,
+        number,
+        path,
     };
     Some(track)
 }
@@ -90,10 +117,10 @@ mod tests {
             &cfg,
         ).expect("etc/foo.flac should to_track ok");
 
-        assert_eq!(track.title, Some("Rip your Nips off (180 BPM)".to_string())); // TODO: Split out BPM
+        assert_eq!(track.title, Some("Rip your Nips off".to_string())); // TODO: Split out BPM
         assert_eq!(track.artist, Some("Captain Credible".to_string()));
         assert_eq!(track.number, Some(1));
-        assert_eq!(track.bpm, None);
+        assert_eq!(track.bpm, Some(180.0));
         assert_eq!(
             track.path,
             pb("01 Captain Credible - Rip your Nips off (180 BPM).flac")
@@ -106,7 +133,7 @@ mod tests {
         assert_eq!(track.title, Some("Rip your Nips off".to_string()));
         assert_eq!(track.artist, Some("Captain Credible".to_string()));
         assert_eq!(track.bpm, None);
-        assert_eq!(track.path, &pb("Captain Credible - Rip your Nips off.flac"));
+        assert_eq!(track.path, pb("Captain Credible - Rip your Nips off.flac"));
 
         // Valid extensions
         assert!(to_track(&pb("etc/foo.flac"), &cfg).is_some());
