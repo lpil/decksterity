@@ -1,0 +1,31 @@
+{
+  "name": "decksterity-ui",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "bin/start-web.sh",
+    "build": "npm run bsb-build && npm run webpack-build",
+    "bsb-build": "bsb -make-world",
+    "bsb-watch": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack-build": "NODE_ENV=production webpack",
+    "webpack-watch": "webpack -w",
+    "webpack-dev-server": "webpack-dev-server"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "reason-react": "^0.3.4"
+  },
+  "devDependencies": {
+    "bs-platform": "^2.2.3",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.3"
+  }
+}
