@@ -1,31 +1,48 @@
-type id =
-  | A
-  | B;
-
-let idToString =
-  fun
-  | A => "A"
-  | B => "B";
-
 let component = ReasonReact.statelessComponent("Deck");
 
-module Styles = {
-  open Theme;
-  let deck = style([display(grid), padding(gapSize)]);
-  let info = style([]);
-  let albumArtSize = px(56);
-  let albumArt = style([height(albumArtSize), width(albumArtSize)]);
-};
+let deckHeight = 80;
 
-let make = (~id, _children) => {
-  ...component,
-  render: _self => {
-    let _ = 1;
-    <div className=Styles.deck>
-      <div className=Styles.info>
-        (ReasonReact.stringToElement("Info"))
+let deckHeightPx = deckHeight |> Css.px;
+
+let deckStyle =
+  Theme.(
+    style([
+      displayGrid,
+      gridTemplateColumns("300px 1fr"),
+      height(deckHeightPx),
+      marginBottom(gapSize),
+    ])
+  );
+
+let waveformStyle =
+  Theme.(
+    style([
+      backgroundColor(pink),
+      /* padding(gapSize), */
+      /* gridTemplateColumns("300px 1fr"), */
+    ])
+  );
+
+let infoStyle = Theme.(style([]));
+
+let infoElem =
+  fun
+  | None => <div className=infoStyle />
+  | Some((track: Track.t)) =>
+    <div className=infoStyle>
+      <div className="">
+        (track |> Track.title |> ReasonReact.stringToElement)
       </div>
-      (ReasonReact.stringToElement("Deck " ++ idToString(id)))
+      <div className="">
+        (track |> Track.artist |> ReasonReact.stringToElement)
+      </div>
     </div>;
-  },
+
+let make = (~track, _children) => {
+  ...component,
+  render: _self =>
+    <div className=deckStyle>
+      (infoElem(track))
+      <div className=waveformStyle />
+    </div>,
 };
