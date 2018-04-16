@@ -16,10 +16,12 @@
   "suffix": ".bs.js",
   "namespace": true,
   "bs-dependencies": [
-    "reason-react"
+    "reason-react",
+    "bs-css"
   ],
   "refmt": 3,
   "warnings": {
-    "error": "+A"
+    "error": "+A-27",
+    "warning": "+A"
   }
 }
