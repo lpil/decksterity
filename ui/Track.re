@@ -9,110 +9,107 @@ type t = {
   number: option(int),
 };
 
-let artist = track => track |> artist |> Option.getWithDefault(_, "Unknown Artist");
+let artist = track =>
+  track |> artist |> Option.getWithDefault(_, "Unknown Artist");
+
+let id = track => artist(track) ++ " - " ++ title(track);
 
 /*
   Example data
  */
 let trackA: option(t) =
-  Some(t(
-    ~title="Rip your nips off",
-    ~artist=Some("Captain Credible"),
-    ~album=Some("Fantasy Mansion"),
-    ~bpm=Some(180),
-    ~number=Some(1),
-  ));
+  Some(
+    t(
+      ~title="Rip your nips off",
+      ~artist=Some("Captain Credible"),
+      ~album=Some("Fantasy Mansion"),
+      ~bpm=Some(180),
+      ~number=Some(1),
+    ),
+  );
 
 let trackB: option(t) = None;
 
-
 let tracks = [
   t(
-    ~title="Rip your nips off",
+    ~title="Fantasy Mansion",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Hot lips in the pool",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Organ master",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Crystal math",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Endless corridors",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Cloth",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Luxury estate",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="I want to go to fun town park",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Fantasy Mansion (LEIF remix)",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title="Forest moon (Harvey Steel non pan flute remake)",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
+    ~title={j|Luxury estate (Lárus Sigurvin remix)|j},
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),
     ~number=Some(1),
   ),
   t(
-    ~title="Rip your nips off",
-    ~artist=Some("Captain Credible"),
-    ~album=Some("Fantasy Mansion"),
-    ~bpm=Some(180),
-    ~number=Some(1),
-  ),
-  t(
-    ~title="Rip your nips off",
+    ~title="Main.h (Center of the Universe dub)",
     ~artist=Some("Captain Credible"),
     ~album=Some("Fantasy Mansion"),
     ~bpm=Some(180),

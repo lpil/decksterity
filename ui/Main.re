@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId(<Page tracks=[] />, "js-app");
+ReactDOMRe.renderToElementWithId(<Page tracks=Track.tracks />, "js-app");

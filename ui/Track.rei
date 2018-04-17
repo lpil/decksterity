@@ -4,6 +4,7 @@ type t;
   Getters and setters
  */
 
+let id: t => string;
 let artist: t => string;
 let title: t => string;
 let album: t => option(string);
