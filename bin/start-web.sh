@@ -1,14 +1,8 @@
 #!/bin/sh
 
-npm run bsb-watch &
-BSB=$!
-
 npm run webpack-dev-server &
-WEBPACk=$!
+WEBPACK=$!
 
-while read line ; do
-  :
-done
+npm run bsb-watch
 
-kill $BSB
-kill $WEBPACk
+kill $WEBPACK

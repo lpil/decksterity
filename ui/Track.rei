@@ -1,7 +1,18 @@
 type t;
 
+/*
+  Getters and setters
+ */
+
 let artist: t => string;
 let title: t => string;
+let album: t => option(string);
+let bpm: t => option(int);
+let number: t => option(int);
+
+/*
+  Example data
+ */
 
 let tracks: list(t);
 let trackA: option(t);

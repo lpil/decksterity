@@ -1,5 +1,6 @@
 open Belt;
 
+[@bs.deriving abstract]
 type t = {
   title: string,
   artist: option(string),
@@ -8,191 +9,113 @@ type t = {
   number: option(int),
 };
 
-let artist = track => Option.getWithDefault(track.artist, "Unknown Artist");
-let title = track => track.title;
+let artist = track => track |> artist |> Option.getWithDefault(_, "Unknown Artist");
 
 /*
   Example data
  */
 let trackA: option(t) =
-  Some({
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  });
+  Some(t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ));
 
 let trackB: option(t) = None;
 
 
 let tracks = [
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
-  {
-    title: "Rip your nips off",
-    artist: Some("Captain Credible"),
-    album: Some("Fantasy Mansion"),
-    bpm: Some(180),
-    number: Some(1),
-  },
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
+  t(
+    ~title="Rip your nips off",
+    ~artist=Some("Captain Credible"),
+    ~album=Some("Fantasy Mansion"),
+    ~bpm=Some(180),
+    ~number=Some(1),
+  ),
 ];
