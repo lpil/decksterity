@@ -4,7 +4,6 @@ use dsp;
 use dsp::Graph;
 use self::dsp_node::DspNode;
 use super::media;
-use super::library::Library;
 
 pub const CHANNELS: usize = 2;
 

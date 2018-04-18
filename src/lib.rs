@@ -1,8 +1,4 @@
 extern crate claxon;
-#[macro_use]
-extern crate conrod;
-#[macro_use]
-extern crate conrod_derive;
 extern crate dsp;
 extern crate jack;
 #[macro_use]
@@ -19,7 +15,6 @@ mod library;
 mod engine;
 mod media;
 mod midi;
-mod gui;
 mod persistance;
 
 use std::sync::{Arc, Mutex};
@@ -34,7 +29,7 @@ pub fn mix() {
     let _tracks = persistance::load_tracks_state().unwrap();
 
     // Set up deck
-    let mut engine = engine::new();
+    let engine = engine::new();
     // let _media = media::read_flac("./media/short-techno.flac".to_string());
     // engine.set_media(media);
     let engine_arc = Arc::new(Mutex::new(engine));
@@ -93,6 +88,6 @@ pub fn mix() {
     // alive until the end of the scope
     let _jack_client = client.activate_async((), process).unwrap();
 
-    // Start the GUI
-    gui::start();
+    // TODO: start server
+    // http://cyderize.github.io/rust-websocket/doc/websocket/server/upgrade/sync/struct.HyperRequest.html
 }
