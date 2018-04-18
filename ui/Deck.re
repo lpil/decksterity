@@ -10,7 +10,8 @@ let deckStyle =
       displayGrid,
       gridTemplateColumns("300px 1fr"),
       height(deckHeightPx),
-      marginBottom(gapSize),
+      paddingBottom(gapSize),
+      lastChild([paddingBottom(zero)]),
     ])
   );
 

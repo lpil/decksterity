@@ -8,7 +8,7 @@ let id: t => string;
 let artist: t => string;
 let title: t => string;
 let album: t => option(string);
-let bpm: t => option(int);
+let bpm: t => option(float);
 let number: t => option(int);
 
 /*
