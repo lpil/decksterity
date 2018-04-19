@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "bin/start-web.sh",
-    "build": "npm run bsb-build && npm run webpack-build",
+    "build": "npm run bsb-build && npm run webpack-build && cp -v ui/index.html dist/",
     "bsb-build": "bsb -make-world",
     "bsb-watch": "bsb -make-world -w",
     "clean": "bsb -clean-world",

@@ -8,6 +8,9 @@ const MIX: &str = "mix";
 const SCAN: &str = "scan";
 
 fn main() {
+    ::std::env::set_var("RUST_LOG", "actix_web=info");
+    env_logger::init();
+
     let matches = App::new("decksterity")
         .author("Louis Pilfold <louis@lpil.uk>")
         .setting(AppSettings::SubcommandRequiredElseHelp)

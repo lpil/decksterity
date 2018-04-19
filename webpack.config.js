@@ -3,7 +3,7 @@ const webpack = require("webpack");
 
 const isProd = process.env.NODE_ENV === "production";
 
-const outputDir = path.join(__dirname, "target/");
+const outputDir = path.join(__dirname, "dist/");
 const srcDir = path.join(__dirname, "ui/");
 
 module.exports = {
